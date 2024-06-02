@@ -14,7 +14,9 @@ function M.setup()
 	vim.api.nvim_create_user_command("Gitblame", function(input)
 		-- get data we need from neovim
 		local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
-		local filename = string.gsub(vim.api.nvim_buf_get_name(0), vim.loop.cwd(), "")
+		local filename = vim.api.nvim_buf_get_name(0)
+		local cwd = vim.loop.cwd()
+		filename = (filename:sub(0, #cwd) == cwd) and filename:sub(#cwd + 1) or cwd
 
 		-- prepare and run comand to get git blame data
 		local cmd = "git blame .%s -L %d,%d -l"
