@@ -1,4 +1,6 @@
-local win_opts = {
+local M = {}
+
+M.win_opts = {
 	title = "Blame",
 	relative = "cursor",
 	width = 80,
@@ -8,7 +10,7 @@ local win_opts = {
 	border = "rounded",
 	style = "minimal",
 }
-function setup()
+function M.setup()
 	vim.api.nvim_create_user_command("Gitblame", function(input)
 		-- get data we need from neovim
 		local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
@@ -42,7 +44,7 @@ function setup()
 		vim.api.nvim_buf_add_highlight(buf, -1, "Keyword", 0, 0, -1)
 
 		-- create floating window with previously created buffer
-		local win = vim.api.nvim_open_win(buf, false, win_opts)
+		local win = vim.api.nvim_open_win(buf, false, M.win_opts)
 		vim.api.nvim_win_set_hl_ns(win, 0)
 		-- create autocmd to close buffer on cursor movement
 		vim.api.nvim_create_autocmd({ "CursorMoved" }, {
@@ -60,3 +62,5 @@ end
 function string.starts_with(String, Start)
 	return string.sub(String, 1, string.len(Start)) == Start
 end
+
+return M
